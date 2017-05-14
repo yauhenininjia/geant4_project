@@ -63,6 +63,8 @@ foreach(_script ${PROJECT_SCRIPTS})
     )
 endforeach()
 
+set(CMAKE_BUILD_TYPE Debug)
+
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #

@@ -49,7 +49,7 @@ void RunAction::BeginOfRunAction(const G4Run*)
 		  G4cout << "--------" << G4endl;
       //hist->fill(energy/keV + G4RandGauss::shoot(0, 33));
 
-      
+
       G4CsvAnalysisManager* analysisManager = G4CsvAnalysisManager::Instance();
       analysisManager->FillH1(0, energy);
       // analysisManager->FillH1(0, aStep->GetPreStepPoint()->GetTotalEnergy());
@@ -65,7 +65,7 @@ void RunAction::EndOfRunAction(const G4Run* )
   G4cout << "mean: " << analysisManager->GetH1(0)->mean() << G4endl;
   G4cout << "rms: " << analysisManager->GetH1(0)->rms() << G4endl;
   for(G4int i = 0; i < analysisManager->GetH1(0)->bins_entries().size(); i++) {
-    G4cout << "entries up to: " << (i + 1) * 14.0 / 100 << " TeV: " << analysisManager->GetH1(0)->bins_entries()[i] << G4endl;
+    G4cout << "entries from " << (i + 0) * 14.0 / 100 << " TeV to " << (i + 1) * 14.0 / 100 << " TeV: " << analysisManager->GetH1(0)->bins_entries()[i] << G4endl;
   }
   analysisManager->Write();
   analysisManager->CloseFile();

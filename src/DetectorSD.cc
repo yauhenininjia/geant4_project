@@ -66,14 +66,27 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
 
     fHitsCollection->insert( newHit );
 
+    
+
     // Prints trackID, chamberNb, Edep and position
     // newHit->Print();
 
-    G4cout << "***********************" << G4endl;
+    G4cout << aStep->GetTotalEnergyDeposit() << G4endl;
+    G4cout << aStep->GetTrack()->GetKineticEnergy() << G4endl;
+    G4cout << aStep->GetPreStepPoint()->GetTotalEnergy() << G4endl;
+
     auto position = newHit->GetPos();
-    G4cout << position << G4endl;
-    // G4cout << position.x() << " " << position.y() << " " << position.z() << G4endl;
-    G4cout << "***********************" << G4endl;
+    if (position.z() == 240) {
+      G4cout << "***********************" << G4endl;
+      G4cout << "Hit's position" << G4endl;
+      G4cout << position << G4endl;
+      // G4cout << position.x() << " " << position.y() << " " << position.z() << G4endl;
+      G4cout << "***********************" << G4endl;
+      //momentum
+
+      G4cout << "momentum: " << aStep->GetTrack()->GetMomentumDirection() << G4endl;
+      G4cout << "velocity: " << aStep->GetTrack()->GetVelocity() << G4endl;
+    }
     
     runAction->FillHist(edep);
      
