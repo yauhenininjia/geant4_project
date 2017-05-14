@@ -4,6 +4,7 @@
 #include "globals.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "tls.hh"
+#include "G4ThreeVector.hh"
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
@@ -31,6 +32,9 @@ class projectDetectorConstruction : public G4VUserDetectorConstruction
     void SetChamberMaterial(G4String );
     void SetMaxStep (G4double );
     void SetCheckOverlaps(G4bool );
+    void SetDetectorRotateYAngle(G4double);
+
+    G4ThreeVector* GetRotatedDetectorCoordinates(G4double);
 
   private:
     // methods
@@ -54,6 +58,8 @@ class projectDetectorConstruction : public G4VUserDetectorConstruction
                                          // magnetic field messenger
     
     G4bool  fCheckOverlaps; // option to activate checking of volumes overlaps 
+
+    G4double detectorRotateYAngle;
 };
 
 

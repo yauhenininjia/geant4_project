@@ -95,5 +95,4 @@
 /gps/ene/max 14 TeV
 /gps/ene/temp 2e20
 
-
-/run/beamOn 10
+/run/beamOn 1000

@@ -50,6 +50,7 @@ projectDetectorConstruction::projectDetectorConstruction()
 
   fNbOfChambers = 1;
   fLogicChamber = new G4LogicalVolume*[fNbOfChambers];
+  this->detectorRotateYAngle = 0.0 * deg;
 }
 //
 projectDetectorConstruction::~projectDetectorConstruction()
@@ -182,9 +183,14 @@ void projectDetectorConstruction::DefineMaterials()
          << fTargetMaterial->GetName() << G4endl;
  // Chamber
 
+
   G4Box* cham_box = new G4Box("chamber", chamberWidth/2, chamberHigh/2, chamberLength/2);
   G4LogicalVolume* cham_log = new G4LogicalVolume(cham_box, chamberMaterial, "chamber");
-  G4VPhysicalVolume* cham_phys = new G4PVPlacement(0, G4ThreeVector(0, 0, gap1 + gap2), cham_log, "chamber", worldLV, false, 0);
+
+  G4RotationMatrix *chamber_rotation_matrix  = new G4RotationMatrix();
+  chamber_rotation_matrix->rotateY(-this->detectorRotateYAngle);
+  G4ThreeVector coordinates =  *(this->GetRotatedDetectorCoordinates(gap1 + gap2));
+  G4VPhysicalVolume* cham_phys = new G4PVPlacement(chamber_rotation_matrix, coordinates, cham_log, "chamber", worldLV, false, 0);
 
 
  // Visualization attributes
@@ -283,8 +289,25 @@ void projectDetectorConstruction::SetChamberMaterial(G4String materialName)
 {
   if ((fStepLimit)&&(maxStep>0.)) fStepLimit->SetMaxAllowedStep(maxStep);
 }
+
 void projectDetectorConstruction::SetCheckOverlaps(G4bool checkOverlaps)
 {
   fCheckOverlaps = checkOverlaps;
-}  
+}
+
+void projectDetectorConstruction::SetDetectorRotateYAngle(G4double angle) {
+  this->detectorRotateYAngle = angle;
+}
+
+G4ThreeVector* projectDetectorConstruction::GetRotatedDetectorCoordinates(G4double distance) {
+  G4ThreeVector *coordinates = new G4ThreeVector();
+
+  G4double x = distance * sin(this->detectorRotateYAngle);
+  G4double z = distance * cos(this->detectorRotateYAngle);
+
+  coordinates->setX(x);
+  coordinates->setZ(z);
+
+  return coordinates;
+}
 

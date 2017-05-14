@@ -45,7 +45,11 @@ int main(int argc,char** argv)
 
   // Set mandatory initialization classes
   //
-  runManager->SetUserInitialization(new projectDetectorConstruction());
+  projectDetectorConstruction *detector_construction = new projectDetectorConstruction();
+  if (argc >= 3) {
+    detector_construction->SetDetectorRotateYAngle(stod(argv[2]) * CLHEP::deg);
+  }
+  runManager->SetUserInitialization(detector_construction);
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->RegisterPhysics(new G4StepLimiterPhysics());
