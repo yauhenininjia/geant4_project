@@ -20,7 +20,7 @@ RunAction::RunAction()
 
   G4CsvAnalysisManager* analysisManager = G4CsvAnalysisManager::Instance();
   G4cout << "Using " << analysisManager->GetType() << G4endl;
-  analysisManager->CreateH1("1","Edep in absorber", 100, 0., 14*TeV);   
+  analysisManager->CreateH1("1","Edep in absorber", 100, 0., 14*TeV);
 }
 
 
@@ -35,27 +35,9 @@ void RunAction::BeginOfRunAction(const G4Run*)
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
   hist = new Hist1i(0, 14000000000, 100);
-  G4CsvAnalysisManager* analysisManager = G4CsvAnalysisManager::Instance();
-  G4String fileName = "analysis.csv";
-  analysisManager->OpenFile(fileName);
+  G4CsvAnalysisManager::Instance()->OpenFile("analysis.csv");
+  hitsCollection = new MomentumVelocity();
 }
- void RunAction::FillHist(G4double energy)
-{
-  if (energy > 0) {
-    // заполняем гистограмму величиной энергии в кэВ
-    hist->fill(energy/keV);
-		  G4cout << "--------" << G4endl;
-		  G4cout << energy / keV << G4endl;
-		  G4cout << "--------" << G4endl;
-      //hist->fill(energy/keV + G4RandGauss::shoot(0, 33));
-
-
-      G4CsvAnalysisManager* analysisManager = G4CsvAnalysisManager::Instance();
-      analysisManager->FillH1(0, energy);
-      // analysisManager->FillH1(0, aStep->GetPreStepPoint()->GetTotalEnergy());
-  }
-}
-
 
 void RunAction::EndOfRunAction(const G4Run* )
 {
@@ -69,6 +51,29 @@ void RunAction::EndOfRunAction(const G4Run* )
   }
   analysisManager->Write();
   analysisManager->CloseFile();
+  hitsCollection->WriteMomelocity("momelocity.csv");
+}
+
+void RunAction::FillHist(G4double energy)
+{
+  if (energy > 0) {
+    // заполняем гистограмму величиной энергии в кэВ
+    hist->fill(energy/keV);
+      G4cout << "--------" << G4endl;
+      G4cout << energy / keV << G4endl;
+      G4cout << "--------" << G4endl;
+      //hist->fill(energy/keV + G4RandGauss::shoot(0, 33));
+
+
+      G4CsvAnalysisManager* analysisManager = G4CsvAnalysisManager::Instance();
+      analysisManager->FillH1(0, energy);
+      // analysisManager->FillH1(0, aStep->GetPreStepPoint()->GetTotalEnergy());
+  }
+}
+
+void RunAction::InsertHitToMomelocityCollection(TrackerHit *hit)
+{
+  hitsCollection->GetHitsArray().push_back(hit);
 }
 
 

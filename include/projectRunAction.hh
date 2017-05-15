@@ -4,6 +4,7 @@
 
 #include "G4UserRunAction.hh"
 #include "globals.hh"
+#include "MomentumVelocity.hh"
 
 
 
@@ -19,12 +20,15 @@ class RunAction : public G4UserRunAction
     virtual ~RunAction();
 
     virtual void BeginOfRunAction(const G4Run* run);
-    virtual void   EndOfRunAction(const G4Run* run);
+    virtual void EndOfRunAction(const G4Run* run);
+    
+    void InsertHitToMomelocityCollection(TrackerHit*);
     
     void FillHist(G4double);
 
   private:
     Hist1i* hist;
+    MomentumVelocity *hitsCollection;
 };
 
 

@@ -63,6 +63,8 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
                                                  ->GetCopyNumber());
     newHit->SetEdep(edep);
     newHit->SetPos (aStep->GetPostStepPoint()->GetPosition());
+    newHit->SetMomentum(aStep->GetTrack()->GetMomentumDirection());
+    newHit->SetVelocity(aStep->GetTrack()->GetVelocity());
 
     fHitsCollection->insert( newHit );
 
@@ -76,17 +78,22 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     G4cout << aStep->GetPreStepPoint()->GetTotalEnergy() << G4endl;
 
     auto position = newHit->GetPos();
+    // TODO properly detect hits on the torec
     if (position.z() == 240) {
       G4cout << "***********************" << G4endl;
       G4cout << "Hit's position" << G4endl;
       G4cout << position << G4endl;
-      // G4cout << position.x() << " " << position.y() << " " << position.z() << G4endl;
       G4cout << "***********************" << G4endl;
-      //momentum
 
       G4cout << "momentum: " << aStep->GetTrack()->GetMomentumDirection() << G4endl;
       G4cout << "velocity: " << aStep->GetTrack()->GetVelocity() << G4endl;
+
+      // Save only hits on torec to momelocity.csv
+      runAction->InsertHitToMomelocityCollection(newHit);
     }
+
+    // Save all hits to momelocity.csv
+    runAction->InsertHitToMomelocityCollection(newHit);
     
     runAction->FillHist(edep);
      

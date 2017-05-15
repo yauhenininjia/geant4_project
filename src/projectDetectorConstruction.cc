@@ -125,7 +125,7 @@ void projectDetectorConstruction::DefineMaterials()
   G4double chamberLength = 22*cm; // length of the chamber
   G4double chamberHigh = 3*cm; // high of the chamber 
   G4double gap1 = 5*cm; // расстояние от источника до мишени
-  G4double gap2 = 30*cm; // расстояние от мишени до детектора
+  G4double gap2 = 50*cm; // расстояние от мишени до детектора
   
   
   

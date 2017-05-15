@@ -3,3 +3,5 @@
 /include/*~
 /src/*~
 !/project_build/vis.mac
+/*/.DS_Store
+.DS_Store

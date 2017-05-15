@@ -88,7 +88,7 @@
 /gps/direction 0 0 1
 /gps/pos/centre 0 0 0
 /gps/ene/type Brem
-/gps/ang/type iso
+# /gps/ang/type iso
 /gps/pos/halfx 2.5 cm
 /gps/pos/halfy 2.5 cm
 /gps/ene/min 14 TeV

@@ -37,19 +37,25 @@ class TrackerHit : public G4VHit
     void SetChamberNb(G4int chamb)      { fChamberNb = chamb; };
     void SetEdep     (G4double de)      { fEdep = de; };
     void SetPos      (G4ThreeVector xyz){ fPos = xyz; };
+    void SetVelocity (G4double velocity) { fVelocity = velocity; };
+    void SetMomentum (G4ThreeVector momentum) { fMomentum = momentum; };
 
     // Get methods
     G4int GetTrackID() const     { return fTrackID; };
     G4int GetChamberNb() const   { return fChamberNb; };
     G4double GetEdep() const     { return fEdep; };
     G4ThreeVector GetPos() const { return fPos; };
+    G4double GetVelocity() const { return fVelocity; };
+    G4ThreeVector GetMomentum() const { return fMomentum; };
 
   private:
 
-      G4int         fTrackID;
-      G4int         fChamberNb;
-      G4double      fEdep;
-      G4ThreeVector fPos;
+  G4int         fTrackID;
+  G4int         fChamberNb;
+  G4double      fEdep;
+  G4ThreeVector fPos;
+  G4double      fVelocity;
+  G4ThreeVector fMomentum;
 };
 
 
