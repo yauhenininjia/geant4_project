@@ -39,6 +39,9 @@ class TrackerHit : public G4VHit
     void SetPos      (G4ThreeVector xyz){ fPos = xyz; };
     void SetVelocity (G4double velocity) { fVelocity = velocity; };
     void SetMomentum (G4ThreeVector momentum) { fMomentum = momentum; };
+    void SetPreStepEnergy (G4double energy) { preStepEnergy = energy; }
+    void SetPostStepEnergy (G4double energy) { postStepEnergy = energy; }
+    void SetParticleName (G4String name) { particleName = name; }
 
     // Get methods
     G4int GetTrackID() const     { return fTrackID; };
@@ -47,6 +50,9 @@ class TrackerHit : public G4VHit
     G4ThreeVector GetPos() const { return fPos; };
     G4double GetVelocity() const { return fVelocity; };
     G4ThreeVector GetMomentum() const { return fMomentum; };
+    G4double GetPreStepEnergy() const { return preStepEnergy; }
+    G4double GetPostStepEnergy() const { return postStepEnergy; }
+    G4String GetParticleName() const { return particleName; }
 
   private:
 
@@ -56,6 +62,10 @@ class TrackerHit : public G4VHit
   G4ThreeVector fPos;
   G4double      fVelocity;
   G4ThreeVector fMomentum;
+  G4double      totalEnergyDeposit;
+  G4double      preStepEnergy;
+  G4double      postStepEnergy;
+  G4String      particleName;
 };
 
 

@@ -65,6 +65,9 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     newHit->SetPos (aStep->GetPostStepPoint()->GetPosition());
     newHit->SetMomentum(aStep->GetTrack()->GetMomentumDirection());
     newHit->SetVelocity(aStep->GetTrack()->GetVelocity());
+    newHit->SetPreStepEnergy(aStep->GetPreStepPoint()->GetTotalEnergy());
+    newHit->SetPostStepEnergy(aStep->GetPostStepPoint()->GetTotalEnergy());
+    newHit->SetParticleName(aStep->GetTrack()->GetParticleDefinition()->GetParticleName());
 
     fHitsCollection->insert( newHit );
 
