@@ -76,13 +76,18 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     // Prints trackID, chamberNb, Edep and position
     // newHit->Print();
 
-    G4cout << aStep->GetTotalEnergyDeposit() << G4endl;
-    G4cout << aStep->GetTrack()->GetKineticEnergy() << G4endl;
-    G4cout << aStep->GetPreStepPoint()->GetTotalEnergy() << G4endl;
+    // G4cout << aStep->GetTotalEnergyDeposit() << G4endl;
+    // G4cout << aStep->GetTrack()->GetKineticEnergy() << G4endl;
+    // G4cout << aStep->GetPreStepPoint()->GetTotalEnergy() << G4endl;
 
     auto position = newHit->GetPos();
-    // TODO properly detect hits on the torec
-    if (position.z() == 240) {
+    if (abs(isOnEndFace(position)) < 0.001) {
+
+    // G4cout << "CHECK" << G4endl;
+    // G4cout << position << G4endl;
+    // G4cout << (abs(isOnEndFace(position)) < 0.001) << G4endl;
+    // std::cin.get();
+
       G4cout << "***********************" << G4endl;
       G4cout << "Hit's position" << G4endl;
       G4cout << position << G4endl;
@@ -96,7 +101,7 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     }
 
     // Save all hits to momelocity.csv
-    runAction->InsertHitToMomelocityCollection(newHit);
+    // runAction->InsertHitToMomelocityCollection(newHit);
     
     runAction->FillHist(edep);
      
@@ -120,4 +125,59 @@ void DetectorSD::EndOfEvent(G4HCofThisEvent*)
   // сохраняем энергию накопленную за событие в детекторе
   // в гистограмму
   // runAction->FillHist(detEnergy);
+}
+
+void DetectorSD::SetCenterPoint(G4ThreeVector coords) {
+  this->centerPoint = coords;
+}
+
+G4ThreeVector DetectorSD::GetCenterPoint() {
+  return this->centerPoint;
+}
+
+void DetectorSD::SetRotateYAngle(G4double angle) {
+  this->rotateYAngle = angle;
+}
+
+void DetectorSD::SetEndFaceCoordinates() {
+  G4double d = PROJECT_CONSTANTS::GAP_1 + PROJECT_CONSTANTS::GAP_2;
+  G4double l = PROJECT_CONSTANTS::CHAMBER_LENGTH;
+  G4double w = PROJECT_CONSTANTS::CHAMBER_WIDTH;
+  G4double h = PROJECT_CONSTANTS::CHAMBER_HEIGHT;
+
+  G4double x_1 = ( d - (l / 2) ) * sin(this->rotateYAngle);
+  G4double y_1 = 0;
+  G4double z_1 = ( d - (l / 2) ) * cos(this->rotateYAngle);
+
+  this->firstEndFacePoint = new G4ThreeVector(x_1, y_1, z_1);
+
+  G4double x_2 = ( d - (l / 2) ) * sin(this->rotateYAngle);
+  G4double y_2 = h / 2;
+  G4double z_2 = ( d - (l / 2) ) * cos(this->rotateYAngle);
+
+  this->secondEndFacePoint = new G4ThreeVector(x_2, y_2, z_2);
+
+  G4double x_3 = ( ( (d - l / 2) ) * sin(this->rotateYAngle) ) - ( ( w / 2 ) * cos(this->rotateYAngle) );
+  G4double y_3 = 0;
+  G4double z_3 = ( ( d - ( l / 2 ) ) * cos(this->rotateYAngle) ) + ( ( w / 2 ) * sin(this->rotateYAngle) );
+
+  this->thirdEndFacePoint = new G4ThreeVector(x_3, y_3, z_3);
+}
+
+G4double DetectorSD::isOnEndFace(G4ThreeVector point) {
+  G4double adx = firstEndFacePoint->x() - point.x();
+  G4double bdx = secondEndFacePoint->x() - point.x();
+  G4double cdx = thirdEndFacePoint->x() - point.x();
+
+  G4double ady = firstEndFacePoint->y() - point.y();
+  G4double bdy = secondEndFacePoint->y() - point.y();
+  G4double cdy = thirdEndFacePoint->y() - point.y();
+
+  G4double adz = firstEndFacePoint->z() - point.z();
+  G4double bdz = secondEndFacePoint->z() - point.z();
+  G4double cdz = thirdEndFacePoint->z() - point.z();
+
+  return  adx * (bdy * cdz - bdz * cdy) +
+          bdx * (cdy * adz - cdz * ady) +
+          cdx * (ady * bdz - adz * bdy);
 }

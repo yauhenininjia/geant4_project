@@ -121,11 +121,17 @@ void projectDetectorConstruction::DefineMaterials()
   targetLength = 0.5*targetLength;        // Half length of the Target  
 
     
-  G4double chamberWidth = 3*cm; // width of the chamber
-  G4double chamberLength = 22*cm; // length of the chamber
-  G4double chamberHigh = 3*cm; // high of the chamber 
-  G4double gap1 = 5*cm; // расстояние от источника до мишени
-  G4double gap2 = 50*cm; // расстояние от мишени до детектора
+  G4double chamberWidth = PROJECT_CONSTANTS::CHAMBER_WIDTH; // width of the chamber
+  G4double chamberLength = PROJECT_CONSTANTS::CHAMBER_LENGTH; // length of the chamber
+  G4double chamberHigh = PROJECT_CONSTANTS::CHAMBER_HEIGHT; // high of the chamber 
+  G4double gap1 = PROJECT_CONSTANTS::GAP_1; // расстояние от источника до мишени
+  G4double gap2 = PROJECT_CONSTANTS::GAP_2; // расстояние от мишени до детектора
+
+  // G4double gap1 = 5 * cm; // расстояние от источника до мишени
+  // G4double gap2 = 50 * cm; // расстояние от мишени до детектора
+  // G4double chamberWidth = 3 * cm; // width of the chamber
+  // G4double chamberLength = 22 * cm; // length of the chamber
+  // G4double chamberHigh = 3 * cm; // high of the chamber 
   
   
   
@@ -218,6 +224,10 @@ void projectDetectorConstruction::ConstructSDandField()
   // Sensitive detectors
 
   DetectorSD* detectorSD = new DetectorSD("DetectorSD", "HitsCollection");
+  detectorSD->SetCenterPoint(*(this->GetRotatedDetectorCoordinates(PROJECT_CONSTANTS::GAP_1 + PROJECT_CONSTANTS::GAP_2)));
+  detectorSD->SetRotateYAngle(this->detectorRotateYAngle);
+  detectorSD->SetEndFaceCoordinates();
+
   G4SDManager* sdMan = G4SDManager::GetSDMpointer();
   sdMan->AddNewDetector(detectorSD);
   SetSensitiveDetector("chamber", detectorSD, true);

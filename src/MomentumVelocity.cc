@@ -23,7 +23,8 @@ void MomentumVelocity::WriteMomelocity( string filename)
 
 	for (int i = 0; i < hits_array.size(); i++)
 	{
-		file  << hits_array[i]->GetParticleName() << ","
+		file  
+          << hits_array[i]->GetParticleName() << ","
           << hits_array[i]->GetVelocity() << ","
           << hits_array[i]->GetMomentum() << ","
           << hits_array[i]->GetEdep() << ","
