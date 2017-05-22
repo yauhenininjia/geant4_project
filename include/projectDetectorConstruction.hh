@@ -6,6 +6,8 @@
 #include "tls.hh"
 #include "G4ThreeVector.hh"
 
+#include "ProjectConstants.hh"
+
 class G4VPhysicalVolume;
 class G4LogicalVolume;
 class G4Material;

@@ -73,7 +73,18 @@ void RunAction::FillHist(G4double energy)
 
 void RunAction::InsertHitToMomelocityCollection(TrackerHit *hit)
 {
-  hitsCollection->GetHitsArray().push_back(hit);
+  TrackerHit * h = new TrackerHit();
+  h->SetTrackID  (hit->GetTrackID());
+  h->SetChamberNb(hit->GetChamberNb());
+  h->SetEdep(hit->GetEdep());
+  h->SetPos (hit->GetPos());
+  h->SetMomentum(hit->GetMomentum());
+  h->SetVelocity(hit->GetVelocity());
+  h->SetPreStepEnergy(hit->GetPreStepEnergy());
+  h->SetPostStepEnergy(hit->GetPostStepEnergy());
+  h->SetParticleName(hit->GetParticleName());
+
+  hitsCollection->GetHitsArray().push_back(h);
 }
 
 
