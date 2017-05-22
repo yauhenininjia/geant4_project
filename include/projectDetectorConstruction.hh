@@ -36,7 +36,7 @@ class projectDetectorConstruction : public G4VUserDetectorConstruction
     void SetCheckOverlaps(G4bool );
     void SetDetectorRotateYAngle(G4double);
 
-    G4ThreeVector* GetRotatedDetectorCoordinates(G4double);
+    G4ThreeVector* GetRotatedDetectorCoordinates();
 
   private:
     // methods

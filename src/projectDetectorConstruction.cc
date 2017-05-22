@@ -114,11 +114,10 @@ void projectDetectorConstruction::DefineMaterials()
 
 // Sizes of the principal geometrical components (solids)
 
-  G4double worldLength = 100*cm;
+  G4double worldLength = PROJECT_CONSTANTS::WORLD_LENGTH;
 
-  G4double targetLength =  5.0*cm;             // length of Target
+  G4double targetLength = PROJECT_CONSTANTS::TARGET_LENGTH;             // length of Target
   G4double targetRadius  = 0.5*targetLength;   // Radius of Target
-  targetLength = 0.5*targetLength;        // Half length of the Target  
 
     
   G4double chamberWidth = PROJECT_CONSTANTS::CHAMBER_WIDTH; // width of the chamber
@@ -175,7 +174,7 @@ void projectDetectorConstruction::DefineMaterials()
   
   G4ThreeVector positionTarget = G4ThreeVector(0,0,gap1);
 
-  G4Tubs* targetS = new G4Tubs("target",0.,targetRadius,targetLength,0.,2*CLHEP::pi);
+  G4Tubs* targetS = new G4Tubs("target",0.,targetRadius,targetLength / 2,0.,2*CLHEP::pi);
   fLogicTarget = new G4LogicalVolume(targetS, fTargetMaterial,"target");
 
   G4double phi = 0.0003 * radian;
@@ -195,7 +194,7 @@ void projectDetectorConstruction::DefineMaterials()
 
   G4RotationMatrix *chamber_rotation_matrix  = new G4RotationMatrix();
   chamber_rotation_matrix->rotateY(-this->detectorRotateYAngle);
-  G4ThreeVector coordinates =  *(this->GetRotatedDetectorCoordinates(gap1 + gap2));
+  G4ThreeVector coordinates =  *(this->GetRotatedDetectorCoordinates());
   G4VPhysicalVolume* cham_phys = new G4PVPlacement(chamber_rotation_matrix, coordinates, cham_log, "chamber", worldLV, false, 0);
 
 
@@ -224,7 +223,7 @@ void projectDetectorConstruction::ConstructSDandField()
   // Sensitive detectors
 
   DetectorSD* detectorSD = new DetectorSD("DetectorSD", "HitsCollection");
-  detectorSD->SetCenterPoint(*(this->GetRotatedDetectorCoordinates(PROJECT_CONSTANTS::GAP_1 + PROJECT_CONSTANTS::GAP_2)));
+  detectorSD->SetCenterPoint(*(this->GetRotatedDetectorCoordinates()));
   detectorSD->SetRotateYAngle(this->detectorRotateYAngle);
   detectorSD->SetEndFaceCoordinates();
 
@@ -309,11 +308,12 @@ void projectDetectorConstruction::SetDetectorRotateYAngle(G4double angle) {
   this->detectorRotateYAngle = angle;
 }
 
-G4ThreeVector* projectDetectorConstruction::GetRotatedDetectorCoordinates(G4double distance) {
+// Rotate around center of target
+G4ThreeVector* projectDetectorConstruction::GetRotatedDetectorCoordinates() {
   G4ThreeVector *coordinates = new G4ThreeVector();
 
-  G4double x = distance * sin(this->detectorRotateYAngle);
-  G4double z = distance * cos(this->detectorRotateYAngle);
+  G4double x = PROJECT_CONSTANTS::GAP_2 * sin(this->detectorRotateYAngle);
+  G4double z = PROJECT_CONSTANTS::GAP_1 + PROJECT_CONSTANTS::GAP_2 * cos(this->detectorRotateYAngle);
 
   coordinates->setX(x);
   coordinates->setZ(z);

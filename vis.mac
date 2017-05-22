@@ -29,13 +29,13 @@
 #
 # Draw geometry:
 /vis/drawVolume
-/vis/scene/add/axes 0 0 0 70 cm
+/vis/scene/add/axes 0 0 0 170 cm
 #
 # Specify view angle:
 /vis/viewer/set/viewpointThetaPhi 70. 20.
 #
 # Specify zoom value:
-/vis/viewer/zoom 1.5
+/vis/viewer/zoom 2.25
 #
 # Specify style (surface, wireframe, auxiliary edges,...)
 #/vis/viewer/set/style wireframe
@@ -95,4 +95,4 @@
 /gps/ene/max 14 TeV
 /gps/ene/temp 2e20
 
-/run/beamOn 500
+/run/beamOn 10
