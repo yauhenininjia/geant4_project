@@ -47,7 +47,12 @@ int main(int argc,char** argv)
   //
   projectDetectorConstruction *detector_construction = new projectDetectorConstruction();
   if (argc >= 3) {
-    detector_construction->SetDetectorRotateYAngle(stod(argv[2]) * CLHEP::deg);
+    G4double units = CLHEP::deg;
+    if (argc >= 4 &&  strcmp(argv[3], "rad") == 0)
+    {
+      units = CLHEP::radian;
+    }
+    detector_construction->SetDetectorRotateYAngle(stod(argv[2]) * units);
   }
   runManager->SetUserInitialization(detector_construction);
 
