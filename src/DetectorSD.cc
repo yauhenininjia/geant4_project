@@ -62,49 +62,36 @@ G4bool DetectorSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     newHit->SetChamberNb(aStep->GetPreStepPoint()->GetTouchableHandle()
                                                  ->GetCopyNumber());
     newHit->SetEdep(edep);
-    newHit->SetPos (aStep->GetPostStepPoint()->GetPosition());
+    newHit->SetPos (aStep->GetPreStepPoint()->GetPosition());
     newHit->SetMomentum(aStep->GetTrack()->GetMomentumDirection());
     newHit->SetVelocity(aStep->GetTrack()->GetVelocity());
     newHit->SetPreStepEnergy(aStep->GetPreStepPoint()->GetTotalEnergy());
     newHit->SetPostStepEnergy(aStep->GetPostStepPoint()->GetTotalEnergy());
     newHit->SetParticleName(aStep->GetTrack()->GetParticleDefinition()->GetParticleName());
+    newHit->SetKineticEnergy(aStep->GetPreStepPoint()->GetKineticEnergy());
+    // G4cout << "Track kinetic energy: " << aStep->GetTrack()->GetKineticEnergy() << G4endl;
+    // G4cout << "PreStep kinetic energy: " << aStep->GetPreStepPoint()->GetKineticEnergy() << G4endl;
+    // G4cout << "PostStep kinetic energy: " << aStep->GetPostStepPoint()->GetKineticEnergy() << G4endl;
+    // G4cout << "Energy deposit: " << edep << G4endl;
+    // G4cout << "Dynamic particle: " << aStep->GetTrack()->GetDynamicParticle()->GetKineticEnergy() << G4endl;
+
+    // G4cout  << "Torec points: "
+    //         << *firstEndFacePoint << " "
+    //         << *secondEndFacePoint << " "
+    //         << *thirdEndFacePoint << G4endl;
+    // G4cout << "Prestep point: " << aStep->GetPreStepPoint()->GetPosition() << G4endl;
+    // G4cout << "Poststep point: " << aStep->GetPostStepPoint()->GetPosition() << G4endl;
+
+    G4ThreeVector *centerVector = new G4ThreeVector(centerPoint.x(), 0, centerPoint.z() - PROJECT_CONSTANTS::GAP_1);
+    newHit->SetAngle(newHit->GetMomentum().angle(*centerVector));
+    delete centerVector;
 
     fHitsCollection->insert( newHit );
 
-    
+    runAction->InsertHitToMomelocityCollection(newHit);
+    runAction->FillHist(aStep->GetPreStepPoint()->GetKineticEnergy());
 
-    // Prints trackID, chamberNb, Edep and position
-    // newHit->Print();
 
-    // G4cout << aStep->GetTotalEnergyDeposit() << G4endl;
-    // G4cout << aStep->GetTrack()->GetKineticEnergy() << G4endl;
-    // G4cout << aStep->GetPreStepPoint()->GetTotalEnergy() << G4endl;
-
-    auto position = newHit->GetPos();
-    if (abs(isOnEndFace(position)) < 0.001) {
-
-    // G4cout << "CHECK" << G4endl;
-    // G4cout << position << G4endl;
-    // G4cout << (abs(isOnEndFace(position)) < 0.001) << G4endl;
-    // std::cin.get();
-
-      G4cout << "***********************" << G4endl;
-      G4cout << "Hit's position" << G4endl;
-      G4cout << position << G4endl;
-      G4cout << "***********************" << G4endl;
-
-      G4cout << "momentum: " << aStep->GetTrack()->GetMomentumDirection() << G4endl;
-      G4cout << "velocity: " << aStep->GetTrack()->GetVelocity() << G4endl;
-
-      // Save only hits on torec to momelocity.csv
-      runAction->InsertHitToMomelocityCollection(newHit);
-    }
-
-    // Save all hits to momelocity.csv
-    // runAction->InsertHitToMomelocityCollection(newHit);
-    
-    runAction->FillHist(edep);
-     
   }
 
   return true;
@@ -121,10 +108,6 @@ void DetectorSD::EndOfEvent(G4HCofThisEvent*)
             << " hits in the tracker chambers: " << G4endl;
      for ( G4int i=0; i<nofHits; i++ ) (*fHitsCollection)[i]->Print();
   }
-
-  // сохраняем энергию накопленную за событие в детекторе
-  // в гистограмму
-  // runAction->FillHist(detEnergy);
 }
 
 void DetectorSD::SetCenterPoint(G4ThreeVector coords) {
@@ -164,20 +147,20 @@ void DetectorSD::SetEndFaceCoordinates() {
   this->thirdEndFacePoint = new G4ThreeVector(x_3, y_3, z_3);
 }
 
-G4double DetectorSD::isOnEndFace(G4ThreeVector point) {
-  G4double adx = firstEndFacePoint->x() - point.x();
-  G4double bdx = secondEndFacePoint->x() - point.x();
-  G4double cdx = thirdEndFacePoint->x() - point.x();
+// G4double DetectorSD::isOnEndFace(G4ThreeVector point) {
+//   G4double adx = firstEndFacePoint->x() - point.x();
+//   G4double bdx = secondEndFacePoint->x() - point.x();
+//   G4double cdx = thirdEndFacePoint->x() - point.x();
 
-  G4double ady = firstEndFacePoint->y() - point.y();
-  G4double bdy = secondEndFacePoint->y() - point.y();
-  G4double cdy = thirdEndFacePoint->y() - point.y();
+//   G4double ady = firstEndFacePoint->y() - point.y();
+//   G4double bdy = secondEndFacePoint->y() - point.y();
+//   G4double cdy = thirdEndFacePoint->y() - point.y();
 
-  G4double adz = firstEndFacePoint->z() - point.z();
-  G4double bdz = secondEndFacePoint->z() - point.z();
-  G4double cdz = thirdEndFacePoint->z() - point.z();
+//   G4double adz = firstEndFacePoint->z() - point.z();
+//   G4double bdz = secondEndFacePoint->z() - point.z();
+//   G4double cdz = thirdEndFacePoint->z() - point.z();
 
-  return  adx * (bdy * cdz - bdz * cdy) +
-          bdx * (cdy * adz - cdz * ady) +
-          cdx * (ady * bdz - adz * bdy);
-}
+//   return  adx * (bdy * cdz - bdz * cdy) +
+//           bdx * (cdy * adz - cdz * ady) +
+//           cdx * (ady * bdz - adz * bdy);
+// }

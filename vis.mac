@@ -5,7 +5,7 @@
 # Use these open statements to open selected visualization
 #
 # Use this open statement to create an OpenGL view:
-/vis/open OGL 600x600-0+0
+/vis/open OGL 1024x768-0+0
 #
 # Use this open statement to create an OpenInventor view:
 #/vis/open OIX
@@ -29,7 +29,7 @@
 #
 # Draw geometry:
 /vis/drawVolume
-/vis/scene/add/axes 0 0 0 170 cm
+/vis/scene/add/axes 0 0 0 470 cm
 #
 # Specify view angle:
 /vis/viewer/set/viewpointThetaPhi 70. 20.
@@ -95,4 +95,4 @@
 /gps/ene/max 14 TeV
 /gps/ene/temp 2e20
 
-/run/beamOn 10
+/run/beamOn 3

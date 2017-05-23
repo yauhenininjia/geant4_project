@@ -41,7 +41,7 @@ class DetectorSD : public G4VSensitiveDetector
 
     void SetEndFaceCoordinates();
 
-    G4double isOnEndFace(G4ThreeVector);
+    // G4double isOnEndFace(G4ThreeVector);
 
   private:
     HitsCollection* fHitsCollection;

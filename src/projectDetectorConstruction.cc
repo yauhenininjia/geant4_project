@@ -98,7 +98,7 @@ void projectDetectorConstruction::DefineMaterials()
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
 
   // Print materials
-  G4cout << *(G4Material::GetMaterialTable()) << G4endl;
+  // G4cout << *(G4Material::GetMaterialTable()) << G4endl;
 }
 
 //
@@ -235,12 +235,12 @@ void projectDetectorConstruction::ConstructSDandField()
   // Create global magnetic field messenger.
   // Uniform magnetic field is then created automatically if
   // the field value is not zero.
- // G4ThreeVector fieldValue = G4ThreeVector();
-  //fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
-  //fMagFieldMessenger->SetVerboseLevel(1);
+  G4ThreeVector fieldValue = G4ThreeVector(0, 0, 4 * tesla);
+  fMagFieldMessenger = new G4GlobalMagFieldMessenger(fieldValue);
+  fMagFieldMessenger->SetVerboseLevel(1);
   
   // Register the field messenger for deleting
- // G4AutoDelete::Register(fMagFieldMessenger);
+  G4AutoDelete::Register(fMagFieldMessenger);
 }
 
 
